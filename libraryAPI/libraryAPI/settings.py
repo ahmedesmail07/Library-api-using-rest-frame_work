@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-en!sclc2odw$7rwk7#am)!u4)!@*8u$iy%=zsc5@nl90s!6e#&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]  # any domain can host the app
 
 
 # Application definition
@@ -37,19 +37,25 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "whitenoise.runserver_nostatic",
+    "corsheaders",
     "rest_framework",
     "books.apps.BooksConfig",
     "apis.apps.ApisConfig",
 ]
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware", 
+    "corsheaders.middleware.CorsMiddleware",  # For Allowing any other one with each framework to work with this
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware', # for deployment
 ]
 
 ROOT_URLCONF = "libraryAPI.urls"
@@ -124,3 +130,16 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+CORS_ALLOWED_ORIGINS = [
+    "https://drf-library.azurewebsites.net",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://drf-library.azurewebsites.net",
+]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
